@@ -1,65 +1,162 @@
-import Image from "next/image";
+import Link from 'next/link'
+import { Shield, Calendar, Bell, FileText, Users, Heart } from 'lucide-react'
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="min-h-screen flex flex-col bg-background">
+      {/* Header */}
+      <header className="border-b border-border bg-card">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Shield className="w-8 h-8 text-primary" />
+            <span className="text-xl font-bold text-foreground">Carteira de Vacinação</span>
+          </div>
+          <Link
+            href="/login"
+            className="px-4 py-2 text-sm font-medium text-primary hover:text-primary/80 transition"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Entrar
+          </Link>
         </div>
+      </header>
+
+      {/* Hero Section */}
+      <main className="flex-1">
+        <section className="py-20 md:py-32">
+          <div className="container mx-auto px-4 max-w-5xl">
+            <div className="text-center space-y-6">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-foreground leading-tight">
+                Sua gestação,{' '}
+                <span className="text-primary">organizada</span> e{' '}
+                <span className="text-secondary">segura</span>.
+              </h1>
+              <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Acompanhe suas vacinas, receba alertas personalizados e proteja você e seu bebê com tecnologia e cuidado.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                <Link
+                  href="/login"
+                  className="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-white bg-secondary hover:bg-secondary/90 rounded-lg transition shadow-lg hover:shadow-xl"
+                >
+                  Começar Agora
+                </Link>
+                <Link
+                  href="/login"
+                  className="inline-flex items-center justify-center px-8 py-3 text-base font-medium text-foreground bg-card hover:bg-muted border border-border rounded-lg transition"
+                >
+                  Já tenho conta
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="py-20 bg-muted/30">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
+              Por que usar nossa carteira digital?
+            </h2>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              <FeatureCard
+                icon={<Bell className="w-8 h-8" />}
+                title="Alertas Inteligentes"
+                description="Receba notificações no momento certo para cada vacina, baseado na sua semana gestacional."
+                color="primary"
+              />
+
+              <FeatureCard
+                icon={<Calendar className="w-8 h-8" />}
+                title="Calendário Personalizado"
+                description="Veja quais vacinas tomar em cada trimestre, com prioridades e janelas ideais."
+                color="secondary"
+              />
+
+              <FeatureCard
+                icon={<Users className="w-8 h-8" />}
+                title="Compartilhamento"
+                description="Compartilhe sua carteira com médicos, enfermeiros e familiares de forma segura."
+                color="accent"
+              />
+
+              <FeatureCard
+                icon={<FileText className="w-8 h-8" />}
+                title="Exportar PDF"
+                description="Gere relatórios completos para levar às consultas médicas."
+                color="primary"
+              />
+
+              <FeatureCard
+                icon={<Shield className="w-8 h-8" />}
+                title="Histórico Completo"
+                description="Registre lote, local e profissional de cada vacina aplicada."
+                color="secondary"
+              />
+
+              <FeatureCard
+                icon={<Heart className="w-8 h-8" />}
+                title="Informações Educativas"
+                description="Aprenda sobre cada vacina: importância, contraindicações e benefícios."
+                color="accent"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <div className="bg-gradient-to-r from-primary to-secondary rounded-2xl p-12 text-center text-white shadow-2xl">
+              <h3 className="text-3xl font-bold mb-4">
+                Pronta para começar?
+              </h3>
+              <p className="text-lg mb-8 opacity-90">
+                Crie sua conta gratuita e tenha acesso completo a todas as funcionalidades.
+              </p>
+              <Link
+                href="/login"
+                className="inline-flex items-center justify-center px-8 py-4 text-base font-medium text-primary bg-white hover:bg-gray-100 rounded-lg transition shadow-lg"
+              >
+                Criar Conta Grátis
+              </Link>
+            </div>
+          </div>
+        </section>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-border bg-card py-8">
+        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
+          <p>© 2025 Carteira de Vacinação para Gestantes</p>
+          <p className="mt-2">Protegendo você e seu bebê com tecnologia e cuidado 💕</p>
+        </div>
+      </footer>
     </div>
-  );
+  )
+}
+
+interface FeatureCardProps {
+  icon: React.ReactNode
+  title: string
+  description: string
+  color: 'primary' | 'secondary' | 'accent'
+}
+
+function FeatureCard({ icon, title, description, color }: FeatureCardProps) {
+  const colorClasses = {
+    primary: 'text-primary bg-primary/10',
+    secondary: 'text-secondary bg-secondary/10',
+    accent: 'text-accent bg-accent/10',
+  }
+
+  return (
+    <div className="bg-card rounded-xl p-6 border border-border hover:shadow-lg transition">
+      <div className={`inline-flex p-3 rounded-lg ${colorClasses[color]} mb-4`}>
+        {icon}
+      </div>
+      <h3 className="font-bold text-xl mb-2 text-foreground">{title}</h3>
+      <p className="text-muted-foreground leading-relaxed">{description}</p>
+    </div>
+  )
 }

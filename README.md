@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💉 Carteira de Vacinação para Gestantes
 
-## Getting Started
+Sistema completo de acompanhamento de vacinação para gestantes com alertas inteligentes, calendário personalizado e compartilhamento com profissionais de saúde.
 
-First, run the development server:
+## 🚀 Funcionalidades
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### ✅ Implementadas (Fase 1)
+- **Autenticação Completa**
+  - Login com email/senha
+  - Login com Google
+  - Recuperação de senha
+  - Cadastro de nova usuária
+
+- **Estrutura do Banco de Dados**
+  - 14 vacinas cadastradas (dTpa, Hepatite B, Influenza, COVID-19, VSR, etc.)
+  - Sistema de alertas inteligentes
+  - Suporte a múltiplas gestações
+  - Compartilhamento com familiares/médicos
+
+### 🔨 Em Desenvolvimento (Fase 2)
+- Dashboard principal
+- Calendário vacinal por trimestre
+- Registro de vacinas
+- Sistema de notificações
+- Geração de PDF
+- Modo pós-parto
+
+## 📋 Pré-requisitos
+
+- Node.js 18+ instalado
+- Conta no Supabase (gratuita)
+
+## 🛠️ Configuração
+
+### 1. Configurar Supabase
+
+1. Acesse [supabase.com](https://supabase.com) e crie um projeto
+2. Vá em **SQL Editor** e execute os scripts na ordem:
+   - `supabase/schema.sql` (cria as tabelas)
+   - `supabase/seed_vaccines.sql` (insere as 14 vacinas)
+
+3. Vá em **Authentication** → **Providers**:
+   - Ative **Email**
+   - Desmarque "Confirm email" (para facilitar testes)
+   - Ative **Google** (opcional, mas recomendado)
+
+4. Copie suas credenciais em **Project Settings** → **API**:
+   - Project URL
+   - anon public key
+
+### 2. Configurar Variáveis de Ambiente
+
+Edite o arquivo `.env.local` e substitua:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=sua_url_do_supabase
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anon
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Instalar e Rodar
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Já instalado! Apenas rode:
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Acesse: [http://localhost:3000](http://localhost:3000)
 
-## Learn More
+## 📊 Estrutura do Banco de Dados
 
-To learn more about Next.js, take a look at the following resources:
+### Tabelas Principais
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **profiles**: Dados da gestante (nome, DPP, alergias)
+- **vaccines**: Catálogo de 14 vacinas
+- **vaccine_records**: Registros de vacinação
+- **alerts**: Sistema de alertas inteligentes
+- **pregnancies**: Suporte a múltiplas gestações
+- **shared_access**: Compartilhamento com médicos/familiares
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🎯 Próximos Passos
 
-## Deploy on Vercel
+1. ✅ Autenticação configurada
+2. ⏳ Criar Dashboard principal
+3. ⏳ Implementar calendário vacinal
+4. ⏳ Sistema de registro de vacinas
+5. ⏳ Alertas automáticos
+6. ⏳ Geração de PDF
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📱 Tecnologias
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Frontend**: Next.js 15 + TypeScript + Tailwind CSS
+- **Backend**: Supabase (PostgreSQL + Auth)
+- **Ícones**: Lucide React
+- **Deploy**: Vercel (recomendado)
+
+## 🆘 Problemas Comuns
+
+### "Invalid API key"
+- Verifique se copiou corretamente as chaves do Supabase
+- Reinicie o servidor: `Ctrl+C` e `npm run dev`
+
+### "Table does not exist"
+- Execute os scripts SQL no Supabase SQL Editor
+- Ordem: `schema.sql` → `seed_vaccines.sql`
+
+### Login não funciona
+- Verifique se desabilitou "Confirm email" no Supabase
+- Verifique se o Google OAuth está configurado (se usar)
+
+## 📞 Suporte
+
+Criado com ❤️ para proteger gestantes e seus bebês!
