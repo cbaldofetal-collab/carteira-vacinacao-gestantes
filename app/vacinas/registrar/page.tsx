@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useApp } from '@/lib/context/AppProvider'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Save, Syringe, Calendar, Package, MapPin, User, FileText, CheckCircle } from 'lucide-react'
+import { ArrowLeft, Save, Syringe, Calendar, Package, MapPin, User, FileText, CheckCircle, Image as ImageIcon } from 'lucide-react'
 
 export default function RegistrarVacinaPage() {
     const { user, vaccines, dashboardData, addVaccineRecord } = useApp()
@@ -20,9 +20,24 @@ export default function RegistrarVacinaPage() {
         professional_name: '',
         notes: '',
     })
+    const [photoFile, setPhotoFile] = useState<File | null>(null)
+    const [photoPreview, setPhotoPreview] = useState<string>('')
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState(false)
+
+    const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            setPhotoFile(file)
+            // Create preview
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                setPhotoPreview(reader.result as string)
+            }
+            reader.readAsDataURL(file)
+        }
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -30,13 +45,13 @@ export default function RegistrarVacinaPage() {
         setError('')
 
         try {
+            const { createClient } = await import('@/lib/supabase/client')
+            const supabase = createClient()
+
             let vaccineId = formData.vaccine_id
 
             // Se não tem vaccine_id mas tem vaccine_name, buscar ou criar a vacina
             if (!vaccineId && formData.vaccine_name) {
-                const { createClient } = await import('@/lib/supabase/client')
-                const supabase = createClient()
-
                 // Primeiro, tentar buscar se já existe
                 const { data: existingVaccine } = await supabase
                     .from('vaccines')
@@ -71,6 +86,26 @@ export default function RegistrarVacinaPage() {
                 throw new Error('Selecione ou digite o nome de uma vacina')
             }
 
+            // Upload da foto se houver
+            let photoUrl = ''
+            if (photoFile) {
+                const fileExt = photoFile.name.split('.').pop()
+                const fileName = `${user?.id}/${Date.now()}.${fileExt}`
+
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('vaccine-photos')
+                    .upload(fileName, photoFile)
+
+                if (uploadError) throw uploadError
+
+                // Get public URL
+                const { data: { publicUrl } } = supabase.storage
+                    .from('vaccine-photos')
+                    .getPublicUrl(fileName)
+
+                photoUrl = publicUrl
+            }
+
             await addVaccineRecord({
                 vaccine_id: vaccineId,
                 dose_number: formData.dose_number,
@@ -80,6 +115,7 @@ export default function RegistrarVacinaPage() {
                 professional_name: formData.professional_name,
                 notes: formData.notes,
                 pregnancy_week: dashboardData?.currentWeek,
+                photo_url: photoUrl || undefined,
             })
 
             setSuccess(true)
@@ -277,6 +313,36 @@ export default function RegistrarVacinaPage() {
                                         placeholder="Reações, sintomas, etc."
                                     />
                                 </div>
+                            </div>
+
+                            {/* Photo Upload */}
+                            <div>
+                                <label className="block text-sm font-medium text-foreground mb-2">
+                                    Foto do Comprovante (Opcional)
+                                </label>
+                                <div className="space-y-3">
+                                    <div className="relative">
+                                        <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handlePhotoChange}
+                                            className="w-full pl-10 pr-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent outline-none transition bg-background file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-white hover:file:bg-primary/90"
+                                        />
+                                    </div>
+                                    {photoPreview && (
+                                        <div className="relative rounded-lg overflow-hidden border-2 border-border max-w-xs">
+                                            <img
+                                                src={photoPreview}
+                                                alt="Preview"
+                                                className="w-full h-auto"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                    Registre a foto do cartão de vacinação
+                                </p>
                             </div>
 
                             {/* Submit Buttons */}
